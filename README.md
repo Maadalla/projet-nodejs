@@ -112,22 +112,12 @@ Accédez à l'application sur : `http://localhost:5173`
 
 ---
 
-## 📸 Aperçu
 
-*(Espace réservé pour vos screenshots magnifiques)*
-
-| Kanban Board | Analytics |
-| :---: | :---: |
-| ![Kanban](placeholder_kanban.png) | ![Analytics](placeholder_analytics.png) |
-
----
 
 ## 👥 Auteurs
 
-Projet réalisé avec passion par :
+Projet réalisé par :
 
-*   **[Votre Nom]** - *Lead Developer & Architect*
+Maadalla
 
 ---
-
-Made with ❤️ and TypeScript (mentality).
