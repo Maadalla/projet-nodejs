@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
-import { X, Check, Search, Calendar as CalendarIcon, User as UserIcon, MessageSquare, List, Send, Loader2 } from 'lucide-react';
+import { X, Check, Search, Calendar as CalendarIcon, User as UserIcon, MessageSquare, List, Send, Loader2, Tag, Plus } from 'lucide-react';
 import axiosInstance from '../../api/axios';
 import { cn } from '../../lib/utils';
 import useAuthStore from '../../store/useAuthStore';
@@ -18,6 +18,8 @@ const STATUS_MAP = {
     'IN_PROGRESS': 'En Cours',
     'DONE': 'Terminé'
 };
+
+const TAG_COLORS = ['#ef4444', '#f59e0b', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899'];
 
 const TaskModal = ({ isOpen, onClose, task: initialTask, projectId, initialStatus }) => {
     const queryClient = useQueryClient();
@@ -50,6 +52,11 @@ const TaskModal = ({ isOpen, onClose, task: initialTask, projectId, initialStatu
         task?.assignees ? task.assignees.map(a => a._id || a) : []
     );
 
+    // Tags State
+    const [tags, setTags] = useState(task?.tags || []);
+    const [newTagName, setNewTagName] = useState('');
+    const [selectedColor, setSelectedColor] = useState(TAG_COLORS[3]);
+
     const [isAssigneeDropdownOpen, setIsAssigneeDropdownOpen] = useState(false);
     const commentsEndRef = useRef(null);
 
@@ -75,6 +82,17 @@ const TaskModal = ({ isOpen, onClose, task: initialTask, projectId, initialStatu
                 return [...prev, memberId];
             }
         });
+    };
+
+    const addTag = () => {
+        if (newTagName.trim()) {
+            setTags([...tags, { name: newTagName, color: selectedColor }]);
+            setNewTagName('');
+        }
+    };
+
+    const removeTag = (index) => {
+        setTags(tags.filter((_, i) => i !== index));
     };
 
     // Mutations
@@ -110,11 +128,11 @@ const TaskModal = ({ isOpen, onClose, task: initialTask, projectId, initialStatu
         e.preventDefault();
         if (task?._id) {
             updateMutation.mutate({
-                title, description, priority, dueDate: dueDate || null, assignees
+                title, description, priority, dueDate: dueDate || null, assignees, tags
             });
         } else {
             createMutation.mutate({
-                title, description, priority, project: projectId, status: initialStatus, assignees, dueDate: dueDate || null
+                title, description, priority, project: projectId, status: initialStatus, assignees, dueDate: dueDate || null, tags
             });
         }
     };
@@ -243,6 +261,60 @@ const TaskModal = ({ isOpen, onClose, task: initialTask, projectId, initialStatu
                                             ))}
                                         </div>
                                     )}
+                                </div>
+                            </div>
+
+                            {/* Tags Section */}
+                            <div className="space-y-2">
+                                <label className="text-xs font-medium text-gray-500 uppercase flex items-center gap-2">
+                                    <Tag className="w-3 h-3" /> Étiquettes
+                                </label>
+
+                                {/* Tag List */}
+                                <div className="flex flex-wrap gap-2 mb-2">
+                                    {tags.map((tag, i) => (
+                                        <span key={i} className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium text-white shadow-sm" style={{ backgroundColor: tag.color }}>
+                                            {tag.name}
+                                            <button type="button" onClick={() => removeTag(i)} className="hover:text-gray-200">
+                                                <X className="w-3 h-3" />
+                                            </button>
+                                        </span>
+                                    ))}
+                                </div>
+
+                                {/* Add Tag Input */}
+                                <div className="flex items-center gap-2">
+                                    <div className="relative flex-1">
+                                        <input
+                                            type="text"
+                                            value={newTagName}
+                                            onChange={(e) => setNewTagName(e.target.value)}
+                                            placeholder="Nouveau tag..."
+                                            className="w-full pl-3 pr-3 py-1.5 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none"
+                                            onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                                        />
+                                    </div>
+                                    <div className="flex gap-1">
+                                        {TAG_COLORS.map(color => (
+                                            <button
+                                                key={color}
+                                                type="button"
+                                                onClick={() => setSelectedColor(color)}
+                                                className={cn(
+                                                    "w-6 h-6 rounded-full border-2 transition-transform hover:scale-110",
+                                                    selectedColor === color ? "border-gray-600 scale-110" : "border-transparent"
+                                                )}
+                                                style={{ backgroundColor: color }}
+                                            />
+                                        ))}
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={addTag}
+                                        className="p-1.5 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-600"
+                                    >
+                                        <Plus className="w-4 h-4" />
+                                    </button>
                                 </div>
                             </div>
 

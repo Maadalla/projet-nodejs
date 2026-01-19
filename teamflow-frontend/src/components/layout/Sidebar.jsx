@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, FolderKanban, LogOut, User } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, LogOut, User, Users, Settings } from 'lucide-react';
 import useAuthStore from '../../store/useAuthStore';
 
 const Sidebar = () => {
@@ -9,6 +9,8 @@ const Sidebar = () => {
     const navigation = [
         { name: 'Tableau de bord', href: '/', icon: LayoutDashboard },
         { name: 'Projets', href: '/projects', icon: FolderKanban },
+        { name: 'Équipe', href: '/team', icon: Users },
+        { name: 'Paramètres', href: '/settings', icon: Settings },
     ];
 
     const isActive = (path) => location.pathname === path;
@@ -17,8 +19,12 @@ const Sidebar = () => {
         <div className="fixed left-0 top-0 h-screen w-64 bg-dark-900 text-white flex flex-col">
             {/* Logo */}
             <div className="p-6 border-b border-dark-700">
-                <h1 className="text-xl font-bold text-primary-400 leading-tight">Collaboration</h1>
-                <p className="text-xs text-dark-400 mt-1">Plateforme</p>
+                <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+                        <LayoutDashboard className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-lg font-bold text-white tracking-tight">Collaboration Plateforme</span>
+                </div>
             </div>
 
             {/* Navigation */}
@@ -75,7 +81,7 @@ const Sidebar = () => {
                     className="w-full flex items-center gap-2 px-4 py-2 rounded-lg text-dark-300 hover:bg-dark-800 hover:text-white transition-all"
                 >
                     <LogOut size={18} />
-                    <span className="font-medium">Logout</span>
+                    <span className="font-medium">Déconnexion</span>
                 </button>
             </div>
         </div>

@@ -57,6 +57,17 @@ const TaskCard = ({ task, index, onClick }) => {
                         </div>
                     </div>
 
+                    {/* Tags */}
+                    {task.tags && task.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mb-2">
+                            {task.tags.map((tag, i) => (
+                                <span key={i} className="px-1.5 py-0.5 rounded text-[10px] font-medium text-white shadow-sm" style={{ backgroundColor: tag.color }}>
+                                    {tag.name}
+                                </span>
+                            ))}
+                        </div>
+                    )}
+
                     {/* Title */}
                     <h4 className={cn(
                         "text-sm font-semibold text-gray-800 mb-3 line-clamp-2",

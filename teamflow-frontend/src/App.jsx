@@ -14,6 +14,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Projects from './pages/Projects';
+import Team from './pages/Team';
+import Settings from './pages/Settings';
 
 // Create React Query client
 const queryClient = new QueryClient({
@@ -44,16 +46,27 @@ function App() {
             <Route path="/register" element={<Register />} />
 
             {/* Routes protégées */}
-            <Route
-              path="/"
-              element={
+            <Route element={<Layout />}>
+              <Route path="/" element={
                 <RequireAuth>
-                  <Layout />
+                  <Dashboard />
                 </RequireAuth>
-              }
-            >
-              <Route index element={<Dashboard />} />
-              <Route path="projects" element={<Projects />} />
+              } />
+              <Route path="/projects" element={
+                <RequireAuth>
+                  <Projects />
+                </RequireAuth>
+              } />
+              <Route path="/team" element={
+                <RequireAuth>
+                  <Team />
+                </RequireAuth>
+              } />
+              <Route path="/settings" element={
+                <RequireAuth>
+                  <Settings />
+                </RequireAuth>
+              } />
             </Route>
 
             {/* Catch all - redirect to dashboard */}

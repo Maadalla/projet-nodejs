@@ -58,8 +58,8 @@ const Register = () => {
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-600 rounded-2xl mb-4">
                         <UserPlus className="w-8 h-8 text-white" />
                     </div>
-                    <h1 className="text-3xl font-bold text-dark-900">Create account</h1>
-                    <p className="text-dark-600 mt-2">Join TeamFlow and start collaborating</p>
+                    <h1 className="text-3xl font-bold text-dark-900">Créer un compte</h1>
+                    <p className="text-dark-600 mt-2">Rejoignez Collaboration Plateforme et collaborez</p>
                 </div>
 
                 {/* Form */}
@@ -75,7 +75,7 @@ const Register = () => {
                         {/* Username */}
                         <div>
                             <label className="block text-sm font-medium text-dark-700 mb-2">
-                                Username
+                                Nom d'utilisateur
                             </label>
                             <div className="relative">
                                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-dark-400" />
@@ -105,7 +105,7 @@ const Register = () => {
                                     value={formData.email}
                                     onChange={handleChange}
                                     className="w-full pl-10 pr-4 py-3 border border-dark-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                                    placeholder="you@example.com"
+                                    placeholder="vous@exemple.com"
                                     required
                                 />
                             </div>
@@ -114,7 +114,7 @@ const Register = () => {
                         {/* Password */}
                         <div>
                             <label className="block text-sm font-medium text-dark-700 mb-2">
-                                Password
+                                Mot de passe
                             </label>
                             <div className="relative">
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-dark-400" />
@@ -134,7 +134,7 @@ const Register = () => {
                         {/* Confirm Password */}
                         <div>
                             <label className="block text-sm font-medium text-dark-700 mb-2">
-                                Confirm Password
+                                Confirmer le mot de passe
                             </label>
                             <div className="relative">
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-dark-400" />
@@ -156,15 +156,15 @@ const Register = () => {
                             disabled={isLoading}
                             className="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {isLoading ? 'Creating account...' : 'Create account'}
+                            {isLoading ? 'Création du compte...' : 'Créer un compte'}
                         </button>
                     </form>
 
                     {/* Login link */}
                     <p className="mt-6 text-center text-sm text-dark-600">
-                        Already have an account?{' '}
+                        Vous avez déjà un compte ?{' '}
                         <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium">
-                            Sign in
+                            Connectez-vous
                         </Link>
                     </p>
                 </div>

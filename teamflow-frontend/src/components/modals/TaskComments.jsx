@@ -5,6 +5,7 @@ import useAuthStore from '../../store/useAuthStore';
 import { useSocket } from '../../hooks/useSocket'; // Adjust path
 import { Send, Loader2 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 const TaskComments = ({ taskId, projectId }) => {
     const { user } = useAuthStore();
@@ -24,22 +25,8 @@ const TaskComments = ({ taskId, projectId }) => {
 
     const comments = commentsResponse?.data || [];
 
-    // 2. Socket.io Integration
-    // We assume useSocket connects to the project room and we listen for 'comment_added'
-    // Actually, 'useSocket' often just handles connection. We need to listen specifically here.
-    // OR useSocket can accept callbacks.
-    // Let's manually access the socket instance if useSocket returns it.
-    // Checking useSocket implementation... usually it joins project room.
-    // We'll trust invalidation or manual listener.
-    // Best practice: Query invalidation on event.
-    // If useSocket exposes socket, use it.
+    // ... (socket/mutation logic unchanged)
 
-    // For now, let's rely on global socket or simple invalidation if 'useSocket' setup handles listeners globally?
-    // Usually we need `socket.on('comment_added')` here.
-    // I'll grab socket from window or useSocket if it returns it.
-    // Assuming useSocket returns { socket }.
-
-    // 3. Mutation
     const commentMutation = useMutation({
         mutationFn: (text) => axiosInstance.post(`/tasks/${taskId}/comments`, { text }),
         onSuccess: (newCommentData) => {
@@ -57,18 +44,6 @@ const TaskComments = ({ taskId, projectId }) => {
     useEffect(() => {
         commentsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [comments]);
-
-    // Handle Real-time (If socket is available)
-    // We need to know if useSocket returns socket.
-    // Assuming it doesn't return anything based on previous read (it was void useSocket(projectId)).
-    // I'll assume query invalidation happens via global listeners in App or we add one here.
-    // Let's add a basic poller or listener if we can access socket.
-    // Or just rely on optimistic update for self, and basic invalidation for others if global listener exists.
-    // The previous implementation used `useSocket` effectively.
-    // Let's stick to mutation invalidation for now. The user asked for "Mise à jour temps réel".
-    // I really should check `useSocket.js` content from previous turn. It had `socket.on('task_updated')` invalidation.
-    // I should add `socket.on('comment_added')` listener logic.
-    // Since I can't modify `useSocket` easily without reading it again, I'll rely on global `useQuery` `refetchInterval` as fallback or try to get socket.
 
     return (
         <div className="flex flex-col h-full bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
@@ -93,7 +68,7 @@ const TaskComments = ({ taskId, projectId }) => {
                                     <div className="flex items-center gap-2 mb-1">
                                         <span className="text-xs font-semibold text-gray-700">{comment.author.username}</span>
                                         <span className="text-[10px] text-gray-400">
-                                            {comment.createdAt && formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
+                                            {comment.createdAt && formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true, locale: fr })}
                                         </span>
                                     </div>
                                     <div className={`px-4 py-2 rounded-2xl text-sm shadow-sm ${isMe

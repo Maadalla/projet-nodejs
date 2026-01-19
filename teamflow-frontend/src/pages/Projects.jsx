@@ -4,14 +4,15 @@ import axiosInstance from '../api/axios';
 import KanbanBoard from '../components/kanban/KanbanBoard';
 import ProjectMembersModal from '../components/modals/ProjectMembersModal';
 import ProjectPlanning from '../components/views/ProjectPlanning';
-import { Loader2, Plus, Users, Layout, List } from 'lucide-react';
+import ProjectAnalytics from '../components/views/ProjectAnalytics';
+import { Loader2, Plus, Users, Layout, List, BarChart3 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const Projects = () => {
     const queryClient = useQueryClient();
     const [selectedProjectId, setSelectedProjectId] = useState(null);
     const [isMembersModalOpen, setIsMembersModalOpen] = useState(false);
-    const [viewMode, setViewMode] = useState('KANBAN'); // 'KANBAN' | 'PLANNING'
+    const [viewMode, setViewMode] = useState('KANBAN'); // 'KANBAN' | 'PLANNING' | 'ANALYTICS'
 
     // 1. Fetch projects
     const { data: projectsData, isLoading } = useQuery({
@@ -114,6 +115,13 @@ const Projects = () => {
                         >
                             <List className="w-4 h-4" />
                         </button>
+                        <button
+                            onClick={() => setViewMode('ANALYTICS')}
+                            className={`p-1.5 rounded-md transition-all ${viewMode === 'ANALYTICS' ? 'bg-white shadow-sm text-primary-600' : 'text-gray-500 hover:text-gray-700'}`}
+                            title="Statistiques"
+                        >
+                            <BarChart3 className="w-4 h-4" />
+                        </button>
                     </div>
                 </div>
 
@@ -143,11 +151,9 @@ const Projects = () => {
             <div className="flex-1 overflow-hidden p-6 relative">
                 {selectedProjectId && (
                     <>
-                        {viewMode === 'KANBAN' ? (
-                            <KanbanBoard projectId={selectedProjectId} />
-                        ) : (
-                            <ProjectPlanning projectId={selectedProjectId} />
-                        )}
+                        {viewMode === 'KANBAN' && <KanbanBoard projectId={selectedProjectId} />}
+                        {viewMode === 'PLANNING' && <ProjectPlanning projectId={selectedProjectId} />}
+                        {viewMode === 'ANALYTICS' && <ProjectAnalytics projectId={selectedProjectId} />}
 
                         <ProjectMembersModal
                             isOpen={isMembersModalOpen}

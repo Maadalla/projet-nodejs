@@ -38,8 +38,8 @@ const Login = () => {
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-600 rounded-2xl mb-4">
                         <LogIn className="w-8 h-8 text-white" />
                     </div>
-                    <h1 className="text-3xl font-bold text-dark-900">Welcome back</h1>
-                    <p className="text-dark-600 mt-2">Sign in to your TeamFlow account</p>
+                    <h1 className="text-3xl font-bold text-dark-900">Bon retour !</h1>
+                    <p className="text-dark-600 mt-2">Connectez-vous à votre compte Collaboration Plateforme</p>
                 </div>
 
                 {/* Form */}
@@ -65,7 +65,7 @@ const Login = () => {
                                     value={formData.email}
                                     onChange={handleChange}
                                     className="w-full pl-10 pr-4 py-3 border border-dark-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                                    placeholder="you@example.com"
+                                    placeholder="vous@exemple.com"
                                     required
                                 />
                             </div>
@@ -74,7 +74,7 @@ const Login = () => {
                         {/* Password */}
                         <div>
                             <label className="block text-sm font-medium text-dark-700 mb-2">
-                                Password
+                                Mot de passe
                             </label>
                             <div className="relative">
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-dark-400" />
@@ -96,15 +96,15 @@ const Login = () => {
                             disabled={isLoading}
                             className="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {isLoading ? 'Signing in...' : 'Sign in'}
+                            {isLoading ? 'Connexion en cours...' : 'Se connecter'}
                         </button>
                     </form>
 
                     {/* Register link */}
                     <p className="mt-6 text-center text-sm text-dark-600">
-                        Don't have an account?{' '}
+                        Pas encore de compte ?{' '}
                         <Link to="/register" className="text-primary-600 hover:text-primary-700 font-medium">
-                            Sign up
+                            Inscrivez-vous
                         </Link>
                     </p>
                 </div>

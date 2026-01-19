@@ -7,9 +7,9 @@ import { useSocket } from '../../hooks/useSocket';
 import { Loader2 } from 'lucide-react';
 
 const COLUMNS = {
-    'TODO': { title: 'To Do', color: 'bg-red-400' },
-    'IN_PROGRESS': { title: 'In Progress', color: 'bg-yellow-400' },
-    'DONE': { title: 'Done', color: 'bg-green-400' },
+    'TODO': { title: 'À Faire', color: 'bg-red-400' },
+    'IN_PROGRESS': { title: 'En Cours', color: 'bg-yellow-400' },
+    'DONE': { title: 'Terminé', color: 'bg-green-400' },
 };
 
 const KanbanBoard = ({ projectId }) => {
