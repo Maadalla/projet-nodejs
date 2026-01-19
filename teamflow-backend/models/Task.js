@@ -28,6 +28,10 @@ const taskSchema = new mongoose.Schema({
         },
         default: 'MEDIUM'
     },
+    tags: [{
+        name: { type: String, required: true },
+        color: { type: String, default: '#3b82f6' }
+    }],
     project: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Project',

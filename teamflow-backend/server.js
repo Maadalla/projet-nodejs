@@ -9,6 +9,8 @@ import authRoutes from './routes/authRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
 import taskRoutes from './routes/taskRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import seedDatabase from './seeder.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 // Charger les variables d'environnement
@@ -39,13 +41,17 @@ app.use(cookieParser());
 app.set('io', io);
 
 // Connexion à MongoDB
-connectDB();
+connectDB().then(() => {
+    seedDatabase();
+});
 
 // Routes API
+app.get('/api/test', (req, res) => res.json({ message: 'Backend is running!' }));
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api', commentRoutes); // Will handle /api/tasks/:id/comments
+app.use('/api/users', userRoutes); // Mount user routes for Team page
 
 // Route de test
 app.get('/api/health', (req, res) => {

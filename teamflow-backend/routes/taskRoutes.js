@@ -7,7 +7,8 @@ import {
     deleteTask,
     getTaskById,
     addComment,
-    getMyTasks
+    getMyTasks,
+    getComments
 } from '../controllers/taskController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -28,6 +29,7 @@ router.delete('/:id', deleteTask);       // DELETE /api/tasks/:id
 router.patch('/:id/status', updateTaskStatus);  // PATCH /api/tasks/:id/status
 
 // Nouvelle route pour ajouter un commentaire
+router.get('/:id/comments', getComments); // GET /api/tasks/:id/comments
 router.post('/:id/comments', addComment); // POST /api/tasks/:id/comments
 
 export default router;

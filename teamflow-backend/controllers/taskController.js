@@ -41,7 +41,7 @@ export const getTasks = async (req, res) => {
 // POST /api/tasks
 export const createTask = async (req, res) => {
     try {
-        const { title, description, priority, project, assignees, dueDate } = req.body;
+        const { title, description, priority, project, assignees, dueDate, tags } = req.body;
 
         if (!title || !project) return res.status(400).json({ success: false, message: 'Title and project required' });
 
@@ -62,7 +62,8 @@ export const createTask = async (req, res) => {
             project,
             assignees: assignees || [],
             position,
-            dueDate: dueDate || null
+            dueDate: dueDate || null,
+            tags: tags || []
         });
 
         await task.save();
@@ -96,7 +97,7 @@ export const updateTask = async (req, res) => {
             return res.status(403).json({ success: false, message: 'Not a member' });
         }
 
-        const allowedUpdates = ['title', 'description', 'priority', 'assignees', 'dueDate'];
+        const allowedUpdates = ['title', 'description', 'priority', 'assignees', 'dueDate', 'tags'];
         Object.keys(updates).forEach(key => {
             if (allowedUpdates.includes(key)) {
                 task[key] = updates[key];
@@ -243,6 +244,40 @@ export const getTaskById = async (req, res) => {
     } catch (error) {
         console.error('Error fetching task:', error);
         res.status(500).json({ success: false, message: 'Error fetching task', error: error.message });
+    }
+};
+
+// GET /api/tasks/:id/comments - Get comments
+export const getComments = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const task = await Task.findById(id).populate('comments.user', 'username email avatarUrl');
+
+        if (!task) return res.status(404).json({ success: false, message: 'Task not found' });
+
+        const project = await Project.findById(task.project);
+        if (!isMember(project, req.user._id)) return res.status(403).json({ success: false, message: 'Not a member' });
+
+        // Sort comments by date (oldest first)
+        const comments = task.comments.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+        // Format for frontend (flattening the nested structure if needed, but frontend expects author keys?)
+        // Task model: comments: [{ user: {...}, text: ..., createdAt: ... }]
+        // Frontend TaskComments.jsx expects: comment.author....
+        // So we need to map `user` to `author`.
+
+        const formattedComments = comments.map(c => ({
+            _id: c._id,
+            text: c.text,
+            createdAt: c.createdAt,
+            author: c.user // Map user to author for frontend compatibility
+        }));
+
+        res.status(200).json({ success: true, count: formattedComments.length, data: formattedComments });
+
+    } catch (error) {
+        console.error('Error fetching comments:', error);
+        res.status(500).json({ success: false, message: 'Error fetching comments', error: error.message });
     }
 };
 
