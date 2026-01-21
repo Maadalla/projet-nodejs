@@ -12,20 +12,20 @@ const ProjectMembersModal = ({ isOpen, onClose, project }) => {
 
     const members = project?.members || [];
 
-    // Check if current user is ADMIN
-    const currentMemberRecord = members.find(m => m.user._id === currentUser._id);
-    const isAdmin = currentMemberRecord?.role === 'ADMIN' || project.owner._id === currentUser._id;
+    // Check if current user is ADMIN (Safely)
+    const currentMemberRecord = members.find(m => m.user._id === currentUser?._id);
+    const isAdmin = project && currentUser ? (currentMemberRecord?.role === 'ADMIN' || project.owner?._id === currentUser._id) : false;
 
     const inviteMutation = useMutation({
-        mutationFn: (email) => axiosInstance.post(`/projects/${project._id}/invite`, { email }),
+        mutationFn: (email) => axiosInstance.post(`/projects/${project?._id}/invite`, { email }),
         onSuccess: (response) => {
-            toast.success("User invited successfully");
+            toast.success("Utilisateur invité avec succès");
             setInviteEmail('');
             // Invalidate projects to refresh members list
             queryClient.invalidateQueries(['projects']);
         },
         onError: (err) => {
-            toast.error(err.response?.data?.message || "Failed to invite user");
+            toast.error(err.response?.data?.message || "Échec de l'invitation");
         }
     });
 
@@ -36,14 +36,14 @@ const ProjectMembersModal = ({ isOpen, onClose, project }) => {
         }
     };
 
-    if (!isOpen) return null;
+    if (!isOpen || !project) return null;
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
             <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
                 {/* Header */}
                 <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-gray-800">Team Members</h2>
+                    <h2 className="text-lg font-semibold text-gray-800">Membres de l'équipe</h2>
                     <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
                         <X className="w-5 h-5 text-gray-500" />
                     </button>
@@ -55,7 +55,7 @@ const ProjectMembersModal = ({ isOpen, onClose, project }) => {
                         <form onSubmit={handleInvite} className="flex gap-2">
                             <input
                                 type="email"
-                                placeholder="mate@example.com"
+                                placeholder="collegue@exemple.com"
                                 className="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
                                 value={inviteEmail}
                                 onChange={(e) => setInviteEmail(e.target.value)}
@@ -67,7 +67,7 @@ const ProjectMembersModal = ({ isOpen, onClose, project }) => {
                                 className="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors disabled:opacity-50 flex items-center gap-2"
                             >
                                 {inviteMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
-                                Invite
+                                Inviter
                             </button>
                         </form>
                     </div>
@@ -98,7 +98,7 @@ const ProjectMembersModal = ({ isOpen, onClose, project }) => {
                                     ) : (
                                         <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-medium">
                                             <UserIcon className="w-3 h-3" />
-                                            Member
+                                            Membre
                                         </span>
                                     )}
                                 </div>
